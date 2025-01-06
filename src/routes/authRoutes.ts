@@ -6,7 +6,7 @@ const router = express.Router();
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 50,
 }) as RequestHandler;
 
 router.post('/register', authLimiter, register);
