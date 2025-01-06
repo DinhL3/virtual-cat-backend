@@ -1,1 +1,1 @@
-# virtual-cat-backend
+# Backend for Virtual Cat game
