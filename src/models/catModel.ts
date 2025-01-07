@@ -7,19 +7,12 @@ export interface ICat extends Document {
   owner: Types.ObjectId;
   adoptedOn: Date;
 
-  /**
-   * Group 'last actions' in a subdocument for clarity.
-   * Each field tracks when the cat was last fed, played with, etc.
-   */
   lastActions: {
     fedAt: Date;
     playedWithAt: Date;
     brushedAt: Date;
   };
 
-  /**
-   * 'parameters' tracks various cat stats or needs.
-   */
   parameters: {
     affection: number;
     hunger: number;
@@ -33,7 +26,6 @@ export interface ICat extends Document {
 
   coatType: 'tabby' | 'void' | 'tuxedo' | 'orange' | 'calico' | 'snow';
 
-  // Mongoose adds these automatically when { timestamps: true } is set.
   createdAt?: Date;
   updatedAt?: Date;
 }

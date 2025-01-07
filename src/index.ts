@@ -1,9 +1,11 @@
-import express from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
+import express from 'express';
+import morgan from 'morgan';
+
 import connectDB from './config/db';
 import authRoutes from './routes/authRoutes';
-import cors from 'cors';
-import morgan from 'morgan';
+import catRoutes from './routes/catRoutes';
 
 dotenv.config();
 
@@ -19,6 +21,7 @@ connectDB();
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/cats', catRoutes);
 
 // Root route
 app.get('/', (req, res) => {

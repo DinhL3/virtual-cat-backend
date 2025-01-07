@@ -1,54 +1,73 @@
-import { RequestHandler } from 'express';
+import { Request, Response } from 'express';
 import { Cat } from '../models/catModel';
 import { Room } from '../models/roomModel';
 import User from '../models/userModel';
+import { Types } from 'mongoose';
 
-export const adoptCat: RequestHandler = async (req, res) => {
+interface AuthRequest extends Request {
+  userId?: string;
+}
+
+export const adoptCat = async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
   try {
-    const { userId } = req;
-    if (!userId) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
+    const userId = req.userId;
 
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    if (user.cat) {
-      return res.status(400).json({ message: 'User already has a cat' });
+    if (!userId) {
+      res.status(401).json({ message: 'Not authorized.' });
+      return;
     }
 
     const { name, coatType } = req.body;
-    const newCat = await Cat.create({
+
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: 'User not found.' });
+      return;
+    }
+
+    if (user.cat) {
+      res.status(400).json({ message: 'User already has a cat.' });
+      return;
+    }
+
+    const newCat = new Cat({
       name,
-      owner: userId,
       coatType,
+      owner: user._id,
       parameters: {
         affection: 0,
         hunger: 50,
         thirst: 50,
-        fun: 50,
-        energy: 50,
-        hygiene: 50,
+        fun: 40,
+        energy: 60,
+        hygiene: 70,
       },
     });
+    await newCat.save();
 
-    const newRoom = await Room.create({
-      owner: userId,
+    const newRoom = new Room({
+      owner: user._id,
       cat: newCat._id,
-      // items default to clean in the schema
     });
+    await newRoom.save();
 
-    user.cat = newCat._id;
-    user.room = newRoom._id;
+    user.cat = newCat._id as Types.ObjectId;
+    user.room = newRoom._id as Types.ObjectId;
     await user.save();
 
-    return res.status(201).json({
-      message: 'Cat adopted successfully',
+    res.status(201).json({
+      message: 'Cat adopted successfully!',
       cat: newCat,
       room: newRoom,
     });
   } catch (error) {
-    return res.status(500).json({ message: 'Server error', error });
+    console.error('Error adopting cat:', error);
+    res.status(500).json({
+      message: 'An error occurred while adopting the cat.',
+      error,
+    });
   }
 };

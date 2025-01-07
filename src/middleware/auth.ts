@@ -5,14 +5,17 @@ interface AuthRequest extends Request {
   userId?: string;
 }
 
-export const auth = (req: AuthRequest, res: Response, next: NextFunction) => {
+export const auth = (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+): void => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
 
     if (!token) {
-      return res
-        .status(401)
-        .json({ message: 'No token, authorization denied' });
+      res.status(401).json({ message: 'No token, authorization denied' });
+      return;
     }
 
     const decoded = jwt.verify(

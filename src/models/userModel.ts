@@ -1,20 +1,20 @@
-import mongoose, { Types } from 'mongoose';
+import mongoose, { Schema, Document, Types } from 'mongoose';
 
-export interface IUser extends mongoose.Document {
+export interface IUser extends Document {
   username: string;
   password: string;
-  cat: Types.ObjectId;
-  room: Types.ObjectId;
+  cat: Types.ObjectId | null;
+  room: Types.ObjectId | null;
   createdAt: Date;
   updatedAt: Date;
 }
 
-const userSchema = new mongoose.Schema<IUser>(
+const userSchema = new Schema<IUser>(
   {
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    cat: { type: mongoose.Schema.Types.ObjectId, ref: 'Cat' },
-    room: { type: mongoose.Schema.Types.ObjectId, ref: 'Room' },
+    cat: { type: Schema.Types.ObjectId, ref: 'Cat', default: null },
+    room: { type: Schema.Types.ObjectId, ref: 'Room', default: null },
   },
   { timestamps: true },
 );
