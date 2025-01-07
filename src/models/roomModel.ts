@@ -15,7 +15,7 @@ export interface IRoom extends Document {
     waterBowl: IRoomItem;
     foodBowl: IRoomItem;
     floor: IRoomItem;
-    catBed: IRoomItem;
+    catTree: IRoomItem;
   };
 
   createdAt?: Date;
@@ -55,7 +55,7 @@ const roomSchema = new Schema<IRoom>(
         cleanliness: { type: Number, default: 100, min: 0, max: 100 },
         lastCleanedAt: { type: Date, default: Date.now },
       },
-      catBed: {
+      catTree: {
         cleanliness: { type: Number, default: 100, min: 0, max: 100 },
         lastCleanedAt: { type: Date, default: Date.now },
       },
