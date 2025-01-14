@@ -1,3 +1,4 @@
+// src/controllers/catController.ts
 import { Request, Response } from 'express';
 import { Cat } from '../models/catModel';
 import { Room } from '../models/roomModel';
