@@ -1,3 +1,4 @@
+// authController.ts
 import { RequestHandler } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -9,7 +10,7 @@ export const register: RequestHandler = async (req, res) => {
 
     if (!username || !password) {
       res.status(400).json({ message: 'Please provide all required fields' });
-      return; // exit handler
+      return;
     }
 
     if (password.length < 6) {
@@ -37,7 +38,7 @@ export const register: RequestHandler = async (req, res) => {
 
     const user = await User.create({ username, password: hashedPassword });
     const token = jwt.sign(
-      { userId: user.id },
+      { userId: user._id },
       process.env.JWT_SECRET || 'fallback-secret',
       { expiresIn: '24h' },
     );
@@ -45,7 +46,7 @@ export const register: RequestHandler = async (req, res) => {
     res.status(201).json({
       message: 'User registered successfully',
       token,
-      user: { id: user.id, username: user.username },
+      user: { _id: user._id, username: user.username },
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
@@ -69,7 +70,7 @@ export const login: RequestHandler = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user.id },
+      { userId: user._id },
       process.env.JWT_SECRET || 'fallback-secret',
       { expiresIn: '24h' },
     );
@@ -77,7 +78,7 @@ export const login: RequestHandler = async (req, res) => {
     res.json({
       message: 'Login successful',
       token,
-      user: { id: user.id, username: user.username },
+      user: { _id: user._id, username: user.username },
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
