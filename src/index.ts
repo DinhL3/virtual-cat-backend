@@ -5,7 +5,7 @@ import morgan from 'morgan';
 
 import connectDB from './config/db';
 import authRoutes from './routes/authRoutes';
-import catRoutes from './routes/catRoutes';
+import gameRoutes from './routes/gameRoutes';
 
 dotenv.config();
 
@@ -21,7 +21,7 @@ connectDB();
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/cats', catRoutes);
+app.use('/api/game', gameRoutes);
 
 // Root route
 app.get('/', (req, res) => {
