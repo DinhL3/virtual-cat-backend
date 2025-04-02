@@ -2,14 +2,10 @@ import { Schema, model, Document, Types } from 'mongoose';
 
 export interface IGameSave extends Document {
   userId: Types.ObjectId;
-  slotNumber: Number;
-  name: String;
   gameState: {
-    currentChapter: Types.ObjectId;
-    currentBlock: Types.ObjectId;
-    characterStats: {
-      name: String;
-    };
+    characterName: string;
+    currentDay: Number;
+    money: Number;
   };
 
   createdAt: Date;
@@ -19,14 +15,10 @@ export interface IGameSave extends Document {
 const gameSaveSchema = new Schema<IGameSave>(
   {
     userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
-    slotNumber: { type: Number, required: true },
-    name: { type: String, required: true },
     gameState: {
-      currentChapter: { type: String, required: true },
-      currentBlock: { type: String, required: true },
-      characterStats: {
-        name: { type: String, required: true },
-      },
+      characterName: { type: String, required: true },
+      currentDay: { type: Number, required: true },
+      money: { type: Number, required: true },
     },
   },
   { timestamps: true },

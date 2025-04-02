@@ -1,11 +1,16 @@
 import express, { RequestHandler } from 'express';
 import { auth } from '../middleware/auth';
-import { register, login } from '../controllers/authController';
-import { newGame } from '../controllers/gameController';
+import {
+  newGame,
+  checkGameSave,
+  loadGame,
+} from '../controllers/gameController';
 // import rateLimit from 'express-rate-limit';
 
 const router = express.Router();
 
-router.post('new', auth, newGame);
+router.post('/new', auth, newGame);
+router.get('/check', auth, checkGameSave);
+router.get('/load', auth, loadGame);
 
 export default router;

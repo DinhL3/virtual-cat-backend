@@ -6,6 +6,70 @@ interface AuthRequest extends Request {
   userId?: string;
 }
 
+export const checkGameSave = async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
+  try {
+    const userId = req.userId;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    // Check if user has an existing game save
+    const existingGameSave = await GameSave.findOne({
+      userId: new Types.ObjectId(userId),
+    });
+
+    res.status(200).json({
+      hasSave: !!existingGameSave,
+      saveData: existingGameSave || null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Error checking game save',
+      details: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+};
+
+export const loadGame = async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
+  try {
+    const userId = req.userId;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    // Find the user's game save
+    const gameSave = await GameSave.findOne({
+      userId: new Types.ObjectId(userId),
+    });
+
+    if (!gameSave) {
+      res.status(404).json({ error: 'No saved game found' });
+      return;
+    }
+
+    // Return the saved game state
+    res.status(200).json({
+      message: 'Game loaded successfully',
+      gameSave: gameSave,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Error loading game',
+      details: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+};
+
 export const newGame = async (
   req: AuthRequest,
   res: Response,
@@ -19,34 +83,30 @@ export const newGame = async (
       return;
     }
 
-    // Check if autosave slot already exists
-    const existingAutosave = await GameSave.findOne({
+    // Check if user already has a game save
+    const existingGameSave = await GameSave.findOne({
       userId: new Types.ObjectId(userId),
-      slotNumber: 0,
     });
 
-    if (existingAutosave) {
-      await existingAutosave.deleteOne();
+    if (existingGameSave) {
+      // Delete existing save if found
+      await existingGameSave.deleteOne();
     }
 
-    // Create new game save
+    // Create new game save with starting values for cat shelter game
     const newGameSave = new GameSave({
       userId: new Types.ObjectId(userId),
-      slotNumber: 0,
-      name: 'Autosave',
       gameState: {
-        currentChapter: 'chapter-1',
-        currentBlock: 'block-1',
-        characterStats: {
-          name: characterName,
-        },
+        characterName: characterName,
+        currentDay: 1, // Starting on day 1
+        money: 0, // Starting with 0 money
       },
     });
 
     await newGameSave.save();
 
     res.status(201).json({
-      message: 'New game started successfully',
+      message: 'New cat shelter game started successfully',
       gameSave: newGameSave,
     });
   } catch (error) {
