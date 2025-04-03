@@ -6,10 +6,14 @@ import morgan from 'morgan';
 import connectDB from './config/db';
 import authRoutes from './routes/authRoutes';
 import gameRoutes from './routes/gameRoutes';
+import { globalRateLimit } from './middleware/rateLimit';
 
 dotenv.config();
 
 const app = express();
+
+// Apply a global rate limit as the first middleware
+app.use(globalRateLimit);
 
 // Middleware
 app.use(express.json());

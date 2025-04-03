@@ -5,12 +5,18 @@ import {
   checkGameSave,
   loadGame,
 } from '../controllers/gameController';
-// import rateLimit from 'express-rate-limit';
+import {
+  resourceIntensiveRateLimit,
+  standardRateLimit,
+} from '../middleware/rateLimit';
 
 const router = express.Router();
 
-router.post('/new', auth, newGame);
-router.get('/check', auth, checkGameSave);
-router.get('/load', auth, loadGame);
+// Apply stricter rate limits to resource-intensive operations
+router.post('/new', auth, resourceIntensiveRateLimit, newGame);
+router.get('/load', auth, resourceIntensiveRateLimit, loadGame);
+
+// Apply standard rate limits to lightweight operations
+router.get('/check', auth, standardRateLimit, checkGameSave);
 
 export default router;
