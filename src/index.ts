@@ -41,10 +41,7 @@ app.get('/api', (req, res) => {
 });
 
 // Serve static Angular files
-const angularPath = path.join(
-  __dirname,
-  '../frontend/dist/virtual-cat/browser',
-);
+const angularPath = path.join(__dirname, '../public');
 app.use(express.static(angularPath));
 
 // Catch all other routes and return Angular app
