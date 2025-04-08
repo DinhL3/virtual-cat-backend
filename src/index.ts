@@ -1,5 +1,7 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import morgan from 'morgan';
 import path from 'path';
@@ -8,8 +10,6 @@ import connectDB from './config/db';
 import authRoutes from './routes/authRoutes';
 import gameRoutes from './routes/gameRoutes';
 import { globalRateLimit } from './middleware/rateLimit';
-
-dotenv.config();
 
 const app = express();
 const isDevelopment = process.env.NODE_ENV === 'development';
