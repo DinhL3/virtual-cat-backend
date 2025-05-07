@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "engines": {
-    "node": "18.x"
+    "node": ">=22.0.0"
   },
   "scripts": {
     "heroku-postbuild": "npm run build",
@@ -36,7 +36,7 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/mongoose": "^5.11.96",
     "@types/morgan": "^1.9.9",
-    "@types/node": "^22.10.5",
+    "@types/node": "^22.15.15",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"

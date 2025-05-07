@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
     /* Language and Environment */
-    "target": "es2021",          // or "es2019" / "es2016" if you need broader compatibility
-    "module": "commonjs",        // Node-style imports
-    "lib": ["es2021"],           // Include latest library definitions
+    "target": "ES2022",          // or "es2019" / "es2016" if you need broader compatibility
+    "module": "NodeNext",        // Node-style imports
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],           // Include latest library definitions
+    "allowJs": true,
 
     /* Modules */
     "rootDir": "./src",          // The folder that contains your source .ts files
