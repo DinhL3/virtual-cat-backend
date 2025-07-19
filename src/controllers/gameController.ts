@@ -116,3 +116,45 @@ export const newGame = async (
     });
   }
 };
+
+export const updateGameState = async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
+  try {
+    const userId = req.userId;
+    const { money } = req.body; // Expecting money to be in the body
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    if (typeof money !== 'number') {
+      res.status(400).json({ error: 'money must be a number' });
+      return;
+    }
+
+    // Find the user's game save and update it
+    const gameSave = await GameSave.findOneAndUpdate(
+      { userId: new Types.ObjectId(userId) },
+      { $set: { 'gameState.money': money } },
+      { new: true }, // Return the updated document
+    );
+
+    if (!gameSave) {
+      res.status(404).json({ error: 'No saved game found' });
+      return;
+    }
+
+    res.status(200).json({
+      message: 'Game state updated successfully',
+      gameSave: gameSave,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Error updating game state',
+      details: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+};

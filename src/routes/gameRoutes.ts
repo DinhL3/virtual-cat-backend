@@ -4,6 +4,7 @@ import {
   newGame,
   checkGameSave,
   loadGame,
+  updateGameState,
 } from '../controllers/gameController';
 import {
   resourceIntensiveRateLimit,
@@ -18,5 +19,6 @@ router.get('/load', auth, resourceIntensiveRateLimit, loadGame);
 
 // Apply standard rate limits to lightweight operations
 router.get('/check', auth, standardRateLimit, checkGameSave);
+router.post('/update', auth, standardRateLimit, updateGameState);
 
 export default router;
